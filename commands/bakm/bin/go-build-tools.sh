@@ -1,6 +1,6 @@
 #!/bin/bash
 
-f=$(dirname $0)/std.shib; [ -f ${f} ] && . ${f} || { echo "${f} not found" 1>&2; exit 1; }
+f=$(dirname $0)/std.shlib; [ -f ${f} ] && . ${f} || { echo "${f} not found" 1>&2; exit 1; }
 
 function main() {
 
