@@ -22,7 +22,7 @@ function build() {
 
     echo -n "building ${executable_name} ... "
     local output_dir=${project_home}/output
-    [ ! -d ${output_dir} ] && mkdir ${project_home}/output || fail "failed to create ${output_dir}"
+    [ ! -d ${output_dir} ] && mkdir ${project_home}/output
 
     go build -o ${output_dir}/${executable_name} ${project_home}/src/*.go && \
         echo "done" || \
