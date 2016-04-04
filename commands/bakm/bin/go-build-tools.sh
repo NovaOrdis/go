@@ -1,6 +1,14 @@
 #!/bin/bash
 
+f=$(dirname $0)/std.shib; [ -f ${f} ] && . ${f} || { echo "${f} not found" 1>&2; exit 1; }
+
 function main() {
+
+    process-common-options $@
+
+#    for i in ${args}; do
+#        # process remaining parameters as ${i}
+#    done
 
     local project_home=$(dirname $0)/..
     local command=$(basename $0)
@@ -14,10 +22,11 @@ function build() {
 
     echo -n "building ${executable_name} ... "
     local output_dir=${project_home}/output
-    [ ! -d ${output_dir} ] && mkdir ${project_home}/output
+    [ ! -d ${output_dir} ] && mkdir ${project_home}/output || fail "failed to create ${output_dir}"
 
-    go build -o ${output_dir}/${executable_name} ${project_home}/src/*.go
-    echo "done"
+    go build -o ${output_dir}/${executable_name} ${project_home}/src/*.go && \
+        echo "done" || \
+        { echo ""; fail "failed to build"; }
 }
 
 function clean() {
@@ -61,6 +70,3 @@ function get-executable-name() {
 }
 
 main $@
-
-
-
