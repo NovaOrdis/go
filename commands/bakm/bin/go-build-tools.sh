@@ -4,7 +4,7 @@ f=$(dirname $0)/std.shlib; [ -f ${f} ] && . ${f} || { echo "${f} not found" 1>&2
 
 function main() {
 
-    process-common-options $@
+    process-common-arguments $@
 
 #    for i in ${args}; do
 #        # process remaining parameters as ${i}
