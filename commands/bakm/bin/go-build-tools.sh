@@ -26,7 +26,7 @@ function build() {
 
     go build -o ${output_dir}/${executable_name} ${project_home}/src/*.go && \
         echo "done" || \
-        { echo ""; fail "failed to build"; }
+        fail "failed to build ${executable_name}";
 }
 
 function clean() {
