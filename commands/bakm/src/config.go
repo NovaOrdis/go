@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-const DEFAULT_KEEP_COUNT = 2
+const DEFAULT_KEEP_COUNT = 10
 
 type config struct {
     dirName string // the name of the target directory as specified in the command line
