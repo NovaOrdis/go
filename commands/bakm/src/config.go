@@ -5,12 +5,16 @@ import (
     "errors"
 )
 
+const DEFAULT_KEEP_COUNT = 2
+
 type config struct {
-    dirName string
-    dirPtr *os.File
+    dirName string // the name of the target directory as specified in the command line
+    dirPtr *os.File // the target directory, if opened successfully
+    keepCount int
 }
 
-// initializes a blank config instance from command line arguments
+// initializes a blank config instance from command line arguments or with defaults
+// if command line arguments values are not available
 func (config *config) init(args []string) error {
 
     var err error
@@ -18,6 +22,16 @@ func (config *config) init(args []string) error {
     if len(args) < 2 {
         return errors.New("no target directory specified")
     }
+
+    //
+    // defaults
+    //
+
+    config.keepCount = DEFAULT_KEEP_COUNT
+
+    //
+    // command line arguments
+    //
 
     config.dirName = args[1]
 

@@ -2,7 +2,6 @@ package main
 
 import (
     "os"
-    "log"
     "fmt"
 )
 
@@ -22,7 +21,29 @@ func main() {
     }
 
     // TODO parse the log package
-    log.Printf(".\n")
+    //log.Printf(".\n")
 
+    //
+    // delete everything from the directory, except most config.keep most recent ones
+    //
 
+    deletedFileNames, err := deleteAllExceptMostRecentOnes(config.dirPtr, config.keepCount)
+
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+
+    if len(deletedFileNames) == 0 {
+
+        fmt.Println("no files deleted")
+
+    } else {
+
+        fmt.Print("deleted ")
+        for _, fileName := range deletedFileNames {
+            fmt.Print(fileName + " ")
+        }
+        fmt.Println()
+    }
 }
