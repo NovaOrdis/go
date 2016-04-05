@@ -13,13 +13,15 @@ than 'keepCount' files are found in the directory, none is removed.
 Usage:
 		bakm [-keep=<keepCount>] <target-directory>
 
+		bakm -help|--help|help|-h
+
 Example:
 
 		bakm -keep=10 /opt/backup
 
 Options
 
-	-keep - specifies the number of files to keep in the directory. Default is 10.
+	-keep - specifies the number of files to keep in the directory (default 10).
 `
 
 func main() {
