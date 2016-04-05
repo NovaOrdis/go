@@ -12,6 +12,8 @@ function main() {
 
     local project_home=$(dirname $0)/..
     local command=$(basename $0)
+    insure-command-exists ${command} || \
+        fail "command '${command}' not supported by the build tool, consider declaring a ${command}() function"
     ${command} ${project_home}
 }
 
@@ -38,6 +40,17 @@ function clean() {
     local output_dir=${project_home}/output
     [ -d ${output_dir} ] && rm -r ${output_dir}
     echo "done"
+}
+
+function format() {
+
+    local project_home=$1
+
+    echo "formatting ... "
+
+    for i in $(find ${project_home} -name *.go); do
+        gofmt -l -w ${i}
+    done
 }
 
 #
@@ -67,6 +80,23 @@ function get-executable-name() {
 
     # not found
     return 1
+}
+
+# returns 0 if the command name corresponds to a declared function, or 1 otherwise
+function insure-command-exists() {
+
+    local command_name=$1
+    local exists=false
+
+    IFS="$(printf '\n\r')"
+    for declaration in $(typeset -F); do
+        if [ "${declaration}" = "declare -f ${command_name}" ]; then
+            exists=true
+            break
+        fi
+    done
+    IFS="$(printf ' \t\n')"
+    ${exists} && return 0 || return 1
 }
 
 main $@
