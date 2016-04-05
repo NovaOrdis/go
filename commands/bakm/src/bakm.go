@@ -5,6 +5,23 @@ import (
 	"os"
 )
 
+const HELP = `
+Utility to clean a directory of old backup files. It removes as many files as necessary
+(possibly none)  so it leaves the newest  'keepCount' files in the directory.  If  less
+than 'keepCount' files are found in the directory, none is removed.
+
+Usage:
+		bakm [-keep=<keepCount>] <target-directory>
+
+Example:
+
+		bakm -keep=10 /opt/backup
+
+Options
+
+	-keep - specifies the number of files to keep in the directory. Default is 10.
+`
+
 func main() {
 
 	var config config
@@ -18,6 +35,18 @@ func main() {
 		//panic(err)
 		fmt.Println(err)
 		return
+	}
+
+	if config.help {
+
+		// display help
+		fmt.Println(HELP)
+
+		if config.helpRequested {
+			os.Exit(0)
+		} else {
+			os.Exit(1)
+		}
 	}
 
 	// TODO parse the log package
