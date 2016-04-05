@@ -46,11 +46,11 @@ function format() {
 
     local project_home=$1
 
-    echo "formatting ... "
-
+    IFS="$(printf '\n\r')"
     for i in $(find ${project_home} -name *.go); do
         gofmt -l -w ${i}
     done
+    IFS="$(printf ' \t\n')"
 }
 
 #

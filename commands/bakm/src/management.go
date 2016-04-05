@@ -1,10 +1,10 @@
 package main
 
 import (
-    "os"
-    "fmt"
-    "sort"
-    "time"
+	"fmt"
+	"os"
+	"sort"
+	"time"
 )
 
 //
@@ -12,8 +12,8 @@ import (
 // helps with sorting
 //
 type fileWithModificationTime struct {
-    basename string
-    modificationTime time.Time
+	basename         string
+	modificationTime time.Time
 }
 
 //
@@ -22,74 +22,73 @@ type fileWithModificationTime struct {
 type byModificationTime []fileWithModificationTime
 
 func (bmt byModificationTime) Len() int {
-    return len(bmt)
+	return len(bmt)
 }
 
 func (bmt byModificationTime) Swap(i, j int) {
-    bmt[i], bmt[j] = bmt[j], bmt[i]
+	bmt[i], bmt[j] = bmt[j], bmt[i]
 }
 
 func (bmt byModificationTime) Less(i, j int) bool {
-    // this sorts in the descending order, from the newest to the oldes
-    return bmt[i].modificationTime.After(bmt[j].modificationTime)
+	// this sorts in the descending order, from the newest to the oldes
+	return bmt[i].modificationTime.After(bmt[j].modificationTime)
 }
 
 // returns a slice containing the names of the deleted files
 func deleteAllExceptMostRecentOnes(dirPtr *os.File, keepCount int) ([]string, error) {
 
-    // we start with an empty slice, if no files are deleted, it will be returned as such
-    deleteFileNames := make([]string, 0)
+	// we start with an empty slice, if no files are deleted, it will be returned as such
+	deleteFileNames := make([]string, 0)
 
-    // scan the directory
-    fileInfos, err := dirPtr.Readdir(-1)
+	// scan the directory
+	fileInfos, err := dirPtr.Readdir(-1)
 
-    if err != nil {
-        return deleteFileNames, err
-    }
+	if err != nil {
+		return deleteFileNames, err
+	}
 
-    files := make(byModificationTime, 0)
+	files := make(byModificationTime, 0)
 
-    for _, fileInfo := range fileInfos {
+	for _, fileInfo := range fileInfos {
 
-        // skip directories
-        if fileInfo.IsDir() {
-            continue
-        }
+		// skip directories
+		if fileInfo.IsDir() {
+			continue
+		}
 
-        files = append(files, fileWithModificationTime{fileInfo.Name(), fileInfo.ModTime()})
-    }
+		files = append(files, fileWithModificationTime{fileInfo.Name(), fileInfo.ModTime()})
+	}
 
-    //
-    // if there are less than 'keepCount', it does not make sense to sort, we'll keep them all
-    //
-    if len(files) <= keepCount {
+	//
+	// if there are less than 'keepCount', it does not make sense to sort, we'll keep them all
+	//
+	if len(files) <= keepCount {
 
-        return deleteFileNames, nil
-    }
+		return deleteFileNames, nil
+	}
 
-    //
-    // sort in place in the descending order of the modification time, the newest files at the top
-    //
-    sort.Sort(files)
+	//
+	// sort in place in the descending order of the modification time, the newest files at the top
+	//
+	sort.Sort(files)
 
-    for i, fwmt := range files {
+	for i, fwmt := range files {
 
-        if i < keepCount {
-            // it's new, we keep it
-            continue
-        }
+		if i < keepCount {
+			// it's new, we keep it
+			continue
+		}
 
-        fileName := dirPtr.Name() + "/" + fwmt.basename
-        //fmt.Printf("removing %s\n", fileName)
-        err = os.Remove(fileName)
-        if err != nil {
-            fmt.Errorf("failed to remove %s\n", fileName)
-            return deleteFileNames, err
-        }
-        deleteFileNames = append(deleteFileNames, fwmt.basename)
+		fileName := dirPtr.Name() + "/" + fwmt.basename
+		//fmt.Printf("removing %s\n", fileName)
+		err = os.Remove(fileName)
+		if err != nil {
+			fmt.Errorf("failed to remove %s\n", fileName)
+			return deleteFileNames, err
+		}
+		deleteFileNames = append(deleteFileNames, fwmt.basename)
 
-    }
+	}
 
-    return deleteFileNames, nil
+	return deleteFileNames, nil
 }
-
