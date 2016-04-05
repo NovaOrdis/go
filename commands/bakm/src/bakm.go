@@ -19,7 +19,7 @@ Example:
 
 		bakm -keep=10 /opt/backup
 
-Options
+Options:
 
 	-keep - specifies the number of files to keep in the directory (default 10).
 `
