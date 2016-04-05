@@ -50,7 +50,8 @@ function format() {
     for i in $(find ${project_home} -name *.go); do
         gofmt -l -w ${i}
     done
-    IFS="$(printf ' \t\n')"
+    IFS="$(printf ' \t\n\r')"
+
 }
 
 #
@@ -77,6 +78,7 @@ function get-executable-name() {
         echo $(basename ${i} .go)
         return 0
     done
+    IFS="$(printf ' \t\n\r')"
 
     # not found
     return 1
@@ -95,7 +97,7 @@ function insure-command-exists() {
             break
         fi
     done
-    IFS="$(printf ' \t\n')"
+    IFS="$(printf ' \t\n\r')"
     ${exists} && return 0 || return 1
 }
 
